@@ -57,3 +57,16 @@ func Dbconnect() *mongo.Client {
 	wg.Wait()
 	return client
 }
+
+func CloseClientDB(client *mongo.Client) {
+	if client == nil {
+		return
+	}
+
+	err := client.Disconnect(context.TODO())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// color.Green("✅ Disconnected from Database")
+}
