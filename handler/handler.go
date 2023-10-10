@@ -11,22 +11,23 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
+//	func check(e error) {
+//		if e != nil {
+//			panic(e)
+//		}
+//	}
 func GenerateCode(template models.BoilerPlate) {
 	var wg sync.WaitGroup
 	s := chin.New().WithWait(&wg)
 
-	color.Blue("\n ⚡⚡ Generating code for %s", template.Title)
+	color.Blue("\n \n ⚡⚡ Generating code for %s  ⚡⚡ \n", template.Title)
 	go s.Start()
 	for _, file := range template.Files {
 		iterateFile(file)
 	}
 	s.Stop()
 	wg.Wait()
+	color.Green("\n  \n ⚡⚡ Code generated successfully  ⚡⚡ \n\n ")
 
 }
 
@@ -38,7 +39,7 @@ func iterateFile(file models.File) bool {
 		// Directory does not exist, create it
 		err := os.MkdirAll(dirPath, os.ModePerm)
 		if err != nil {
-			log.Fatalf("Error creating directory %s: %v", dirPath, err)
+			log.Fatalf("\n Error creating directory %s: %v", dirPath, err)
 			return false
 		}
 	}
@@ -46,7 +47,7 @@ func iterateFile(file models.File) bool {
 	// Check if the file exists
 	if _, err := os.Stat(dirPath + "/" + fileName); err == nil {
 		// File already exists
-		color.Yellow("File %s already exists", dirPath)
+		color.Yellow("\n File %s already exists", dirPath)
 
 		prompt := promptui.Prompt{
 			Label:     "Do you want to overwrite it?",
