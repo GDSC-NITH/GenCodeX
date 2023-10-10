@@ -1,7 +1,7 @@
 package db
 
 import (
-	config "GenCodeX/handler"
+	config "GenCodeX/config"
 	"context"
 	"log"
 	"sync"
@@ -43,11 +43,11 @@ func Dbconnect() *mongo.Client {
 	if err != nil {
 		s.Stop()
 		wg.Wait()
-		color.Red("⛒ Connection Failed to Database \n")
-		color.Yellow("⛒ Check your connection please")
+		color.Red("⚠️ Connection Failed to Database \n")
+		color.Yellow("⚠️ Check your connection please")
 		log.Fatal(err)
 	}
-	color.Green("⛁ Connected to Database")
+	color.Green("✅ Connected to Database")
 	// Send a ping to confirm a successful connection
 	if err := client.Database("boolerplates").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Err(); err != nil {
 		panic(err)

@@ -2,8 +2,10 @@
 package main
 
 import (
-	options "GenCodeX/controller"
+	controller "GenCodeX/controller"
 	db "GenCodeX/db"
+	"GenCodeX/handler"
+	"GenCodeX/models"
 	"fmt"
 	"log"
 	"os"
@@ -40,50 +42,82 @@ func main() {
 		},
 		Action: func(cCtx *cli.Context) error {
 
-			langOptions := options.GetLangs(client)
-			// Sort the language options alphabetically
-			sort.SliceStable(langOptions, func(i, j int) bool {
-				return langOptions[i].ProgLang < langOptions[j].ProgLang
+			langcontroller := controller.GetLangs(client)
+			if len(langcontroller) == 0 {
+				color.Magenta("No languages found")
+				return nil
+			}
+			// Sort the language controller alphabetically
+			sort.SliceStable(langcontroller, func(i, j int) bool {
+				return langcontroller[i].ProgLang < langcontroller[j].ProgLang
 			})
 
 			// Create a prompt for user selection
-			prompt := promptui.Select{
+			langPrompt := promptui.Select{
 				Label: "Select a language",
-				Items: Map(langOptions, func(lang options.Options) string {
+				Items: Map(langcontroller, func(lang controller.Options) string {
 					return lang.ProgLang
 				}),
 			}
 
-			_, selectedLang, err := prompt.Run()
+			_, selectedLang, err := langPrompt.Run()
 
 			if err != nil {
 				fmt.Printf("Prompt failed %v\n", err)
 				panic(err)
 			}
-			fmt.Printf("Selected Language %q\n", selectedLang)
 
 			// Perform a search to find the selected language
 			var langIndex = 0
-			for idx, lang := range langOptions {
+			for idx, lang := range langcontroller {
 				if lang.ProgLang == selectedLang {
 					langIndex = idx
 					break
 				}
 			}
-			prompt2 := promptui.Select{
+			topicPrompt := promptui.Select{
 				Label: "Select a Topic",
-				Items: langOptions[langIndex].Topics,
+				Items: langcontroller[langIndex].Topics,
 			}
 
-			_, selectedTopic, err := prompt2.Run()
+			_, selectedTopic, err := topicPrompt.Run()
 
 			if err != nil {
-				fmt.Printf("Prompt failed %v\n", err)
+				color.Red("Prompt failed %v\n", err)
 				panic(err)
 			}
-			fmt.Printf("Selected Topic %q\n", selectedTopic)
+			// fmt.Println("Selected : ", langIndex, langcontroller[langIndex].ProgLang, selectedTopic)
 
-			fmt.Println("Selected : ", langIndex, langOptions[langIndex].ProgLang, selectedTopic)
+			codeSuggestions := controller.GetTemplateSuggestions(client, langcontroller[langIndex].ProgLang, selectedTopic)
+			sort.SliceStable(codeSuggestions, func(i, j int) bool {
+				return codeSuggestions[i].Title < codeSuggestions[j].Title
+			})
+			if len(codeSuggestions) == 0 {
+				color.Magenta("No code templates found")
+				return nil
+			}
+			codePrompt := promptui.Select{
+				Label: "Select a Code Template",
+				Items: Map(codeSuggestions, func(template models.BoilerPlate) string {
+					return template.Title
+				}),
+			}
+			_, selectedCodeTemplate, err := codePrompt.Run()
+			if err != nil {
+				color.Red("Prompt failed %v\n", err)
+				panic(err)
+			}
+			// Perform a search to find the selected template
+			var tempIndex = 0
+			for idx, lang := range codeSuggestions {
+				if lang.Title == selectedCodeTemplate {
+					tempIndex = idx
+					break
+				}
+			}
+			var template models.BoilerPlate = codeSuggestions[tempIndex]
+
+			handler.GenerateCode(template)
 
 			return nil
 		},

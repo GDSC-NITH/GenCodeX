@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 // BoilerPlate -> boilerplate model
 type BoilerPlate struct {
 	ID       primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Name     string             `json:"name,omitempty" bson:"name,omitempty"`
+	Title    string             `json:"title,omitempty" bson:"title,omitempty"`
 	ProgLang string             `json:"progLang,omitempty" bson:"progLang,omitempty"`
 	Topics   []string           `json:"topics,omitempty" bson:"topics,omitempty"`
 	Files    []File             `json:"files,omitempty" bson:"files,omitempty"`
