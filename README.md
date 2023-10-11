@@ -8,7 +8,7 @@ You can [catch me on LinkedIn: @KanakKholwal ](https://www.linkedin.com/in/kanak
 
 ## Install
 
-## ```sql
+## ```
 go install -u github.com/GDSC-NITH/GenCodeX
 ```Usage
 
