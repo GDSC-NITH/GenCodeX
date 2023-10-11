@@ -8,13 +8,13 @@ You can [catch me on LinkedIn: @KanakKholwal ](https://www.linkedin.com/in/kanak
 
 ## Install
 
-``
+```
  go install -u github.com/GDSC-NITH/GenCodeX
-``
+```
 ## Usage
 
 1. Open terminal in your desired folder
 
-``
+```
 GenCodeX // press enter 
-``
+```
