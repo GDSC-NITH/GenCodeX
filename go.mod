@@ -1,4 +1,4 @@
-module GenCodeX
+module github.com\GDSC-NITH\GenCodeX
 
 go 1.21.0
 
