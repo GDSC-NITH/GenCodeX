@@ -1,4 +1,4 @@
-// main.go
+// GenCodeX.go
 package GenCodeX
 
 import (
