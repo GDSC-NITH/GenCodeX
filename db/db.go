@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var client *mongo.Client
+// var client *mongo.Client
 
 // Dbconnect -> connects mongo
 func Dbconnect() *mongo.Client {
